@@ -5,6 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// Databases
+var mongo = require('mongoskin');
+var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parser:true});
+
+// Make db accessible to the router
+app.use(function (req, res, next){
+    req.db = db;
+    next();
+})
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
