@@ -10,6 +10,7 @@ function populateTable(){
 	var tableContent = '';
 
 	$.getJSON('/users/userlist', function(data){
+			userListData = data;
 			$.each(data, function(){
 				tableContent += '<tr>';
 				tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.username + '">' + this.username + '</a></td>';
@@ -17,16 +18,16 @@ function populateTable(){
 				tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
             	tableContent += '</tr>';
 			});
-		$("#userList table tbody").html(tableContent);
+		$('#userList table tbody').html(tableContent);
+		$('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 	});
 };
 
-function showUserInfo(event){
+// Show User Info
+function showUserInfo(event) {
 	event.preventDefault();
 	var thisUserName = $(this).attr('rel');
-	var arrayPositon = userListData.map(function (arrayItem){
-		return arrayItem.username;
-	}).indexOf(thisUserName);
+	var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username; }).indexOf(thisUserName);
 };
 
 function addUser(event) {
@@ -64,5 +65,29 @@ function addUser(event) {
 			}
 		});
 	};
+};
+
+function deleteUser(event){
+	event.preventDefault();
+
+	// pop up a confirmation dialog
+	var confirmation = confirm('are you sure you want to delete this user?');
+
+	if(confirmation === true){
+		$.ajax({
+			type: 'DELETE',
+			url: '/users/deleteuser/' + $(this).attr('rel')
+		}).done(function (response) {
+			if (response.msg === ''){
+
+			}
+			else {
+				alert('Error: ' + response.msg);
+			}
+			populateTable();
+		});
+	}
+	else 
+		return false;
 };
 
