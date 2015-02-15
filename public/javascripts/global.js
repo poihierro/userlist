@@ -27,7 +27,17 @@ function populateTable(){
 function showUserInfo(event) {
 	event.preventDefault();
 	var thisUserName = $(this).attr('rel');
+
 	var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username; }).indexOf(thisUserName);
+
+	// Get our User Object
+    var thisUserObject = userListData[arrayPosition];
+
+    //Populate Info Box
+    $('#userInfoName').text(thisUserObject.fullname);
+    $('#userInfoAge').text(thisUserObject.age);
+    $('#userInfoGender').text(thisUserObject.gender);
+    $('#userInfoLocation').text(thisUserObject.location);
 };
 
 function addUser(event) {
